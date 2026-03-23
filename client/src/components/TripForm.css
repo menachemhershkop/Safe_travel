@@ -1,0 +1,76 @@
+.trip-form-card {
+  width: min(420px, 100%);
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.trip-form-card h1 {
+  margin: 0 0 1rem;
+  font-size: 1.4rem;
+}
+
+.trip-form {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.trip-form label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+
+.autocomplete-field {
+  position: relative;
+}
+
+.trip-form input {
+  border: 1px solid #d4d9e1;
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+  font-size: 1rem;
+}
+
+.trip-form input:focus {
+  outline: 2px solid #9fc3ff;
+  border-color: #7aa7f7;
+}
+
+.suggestions-list {
+  margin: 0;
+  padding: 0.35rem 0;
+  list-style: none;
+  position: absolute;
+  top: calc(100% + 0.2rem);
+  left: 0;
+  right: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid #d4d9e1;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  z-index: 10;
+}
+
+.suggestion-button {
+  width: 100%;
+  text-align: right;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.95rem;
+}
+
+.suggestion-button:hover {
+  background-color: #f1f5ff;
+}
+
+.suggestion-status {
+  padding: 0.45rem 0.75rem;
+  color: #5a6475;
+  font-size: 0.9rem;
+}
