@@ -37,7 +37,7 @@ function TripForm() {
           setOriginSuggestions(results)
           setIsOriginLoading(false)
         }
-      }, 350),
+      }, 150),
     [],
   )
 
@@ -50,7 +50,7 @@ function TripForm() {
           setDestinationSuggestions(results)
           setIsDestinationLoading(false)
         }
-      }, 350),
+      }, 150),
     [],
   )
 
