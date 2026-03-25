@@ -4,10 +4,8 @@ import { searchIsraeliAddresses } from '../functions/addressService'
 import { debounce } from '../functions/debounce'
 import { useRouteStore } from './zustand/store.js'
 import { useMapRoute } from './map/hooks/useMapRoute'
-function TripForm() {
-  // const [origin, setOrigin] = useState('')
-  // const [destination, setDestination] = useState('')
-  // const [departureTime, setDepartureTime] = useState('')
+
+function TripForm({ onPlanned } = {}) {
   const [selectedOrigin, setSelectedOrigin] = useState(null)
   const [selectedDestination, setSelectedDestination] = useState(null)
   const [originSuggestions, setOriginSuggestions] = useState([])
@@ -15,15 +13,23 @@ function TripForm() {
   const [isOriginLoading, setIsOriginLoading] = useState(false)
   const [isDestinationLoading, setIsDestinationLoading] = useState(false)
   const [openField, setOpenField] = useState(null)
-  // const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState('')
   const [submitError, setSubmitError] = useState('')
   const originRef = useRef('')
   const destinationRef = useRef('')
 
-  const { origin, destination, departureTime, isSubmitting, setIsSubmitting, setOrigin, setDestination, setDepartureTime } = useRouteStore()
+  const {
+    origin,
+    destination,
+    departureTime,
+    isSubmitting,
+    setIsSubmitting,
+    setOrigin,
+    setDestination,
+    setDepartureTime,
+  } = useRouteStore()
 
-  const { loadRoute } = useMapRoute();
+  const { loadRoute } = useMapRoute()
 
   originRef.current = origin
   destinationRef.current = destination
@@ -116,7 +122,7 @@ function TripForm() {
     }
 
     if (!selectedOrigin || !selectedDestination) {
-      setSubmitError('כדי לשלוח למפה, יש לבחור מוצא ויעד מתוך רשימת ההצעות.')
+      setSubmitError('כדי לתכנן נסיעה, יש לבחור מוצא ויעד מתוך רשימת ההצעות.')
       return
     }
 
@@ -139,14 +145,16 @@ function TripForm() {
 
     try {
       await loadRoute()
-      setSubmitMessage('הפרטים נשלחו בהצלחה.')
+      setSubmitMessage('הנסיעה תוכננה בהצלחה.')
+      if (typeof onPlanned === 'function') {
+        onPlanned()
+      }
     } catch (error) {
-      setSubmitError(error.message || 'שליחה נכשלה, נסה שוב.')
+      setSubmitError(error.message || 'תכנון נכשל, נסה שוב.')
     } finally {
       setIsSubmitting(false)
     }
   }
-  // console.log(origin, destination, departureTime,);
 
   return (
     <section className="trip-form-card">
@@ -171,17 +179,17 @@ function TripForm() {
               {isOriginLoading ? <li className="suggestion-status">טוען הצעות...</li> : null}
               {!isOriginLoading
                 ? originSuggestions.map((suggestion) => (
-                  <li key={suggestion.id}>
-                    <button
-                      type="button"
-                      className="suggestion-button"
-                      onMouseDown={(event) => event.preventDefault()}
-                      onClick={() => selectOrigin(suggestion)}
-                    >
-                      {suggestion.label}
-                    </button>
-                  </li>
-                ))
+                    <li key={suggestion.id}>
+                      <button
+                        type="button"
+                        className="suggestion-button"
+                        onMouseDown={(event) => event.preventDefault()}
+                        onClick={() => selectOrigin(suggestion)}
+                      >
+                        {suggestion.label}
+                      </button>
+                    </li>
+                  ))
                 : null}
             </ul>
           ) : null}
@@ -200,25 +208,22 @@ function TripForm() {
             onBlur={() => setTimeout(() => setOpenField(null), 120)}
             placeholder="לדוגמה: ירושלים"
           />
-          {openField === 'destination' &&
-            (isDestinationLoading || destinationSuggestions.length > 0) ? (
+          {openField === 'destination' && (isDestinationLoading || destinationSuggestions.length > 0) ? (
             <ul className="suggestions-list">
-              {isDestinationLoading ? (
-                <li className="suggestion-status">טוען הצעות...</li>
-              ) : null}
+              {isDestinationLoading ? <li className="suggestion-status">טוען הצעות...</li> : null}
               {!isDestinationLoading
                 ? destinationSuggestions.map((suggestion) => (
-                  <li key={suggestion.id}>
-                    <button
-                      type="button"
-                      className="suggestion-button"
-                      onMouseDown={(event) => event.preventDefault()}
-                      onClick={() => selectDestination(suggestion)}
-                    >
-                      {suggestion.label}
-                    </button>
-                  </li>
-                ))
+                    <li key={suggestion.id}>
+                      <button
+                        type="button"
+                        className="suggestion-button"
+                        onMouseDown={(event) => event.preventDefault()}
+                        onClick={() => selectDestination(suggestion)}
+                      >
+                        {suggestion.label}
+                      </button>
+                    </li>
+                  ))
                 : null}
             </ul>
           ) : null}
