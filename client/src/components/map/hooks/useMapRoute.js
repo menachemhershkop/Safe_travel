@@ -1,36 +1,3 @@
-// import { useEffect, useState } from 'react';
-// import { fetchRoute } from '../services/routeService.js';
-// import { decodePolyline } from '../utils/polyline.js';
-
-// export function useMapRoute() {
-//   const [coordinates, setCoordinates] = useState([]);
-//   useEffect(() => {
-//     let cancelled = false;
-
-//     async function load() {
-//       const route = await fetchRoute();
-
-//       // Current contract: mock route coordinates.
-//       if (route?.coordinates && Array.isArray(route.coordinates)) {
-//         if (!cancelled) setCoordinates(route.coordinates);
-//         return;
-//       }
-
-//       // Future contract: routeService may return an encoded polyline.
-//       if (route?.encodedPolyline && typeof route.encodedPolyline === 'string') {
-//         if (!cancelled) setCoordinates(decodePolyline(route.encodedPolyline));
-//       }
-//     }
-
-//     load();
-
-//     return () => {
-//       cancelled = true;
-//     };
-//   }, []);
-
-//   return { coordinates };
-// }
 
 import { useCallback, useState } from 'react';
 import { fetchRoute } from '../services/routeService.js';
@@ -41,6 +8,7 @@ export function useMapRoute() {
   const [loading, setLoading] = useState(false);
   const setSegments = useRouteStore((s) => s.setSegments);
   const setTripRisk = useRouteStore((s) => s.setTripRisk);
+  const setConfines = useRouteStore((s) => s.setConfines)
 
   function reduceCoordinates(coords, maxPoints = 200) {
     if (!Array.isArray(coords) || coords.length <= maxPoints) return coords || [];
@@ -56,8 +24,11 @@ export function useMapRoute() {
     setLoading(true);
     try {
       setSegments([]);
-      const routeCoords = await fetchRoute();
-      console.log(routeCoords);
+      const res = await fetchRoute();
+
+      const { coordinates, confines } = res
+      const routeCoords = coordinates
+      setConfines(confines)
 
       if (!Array.isArray(routeCoords) || routeCoords.length === 0) {
         throw new Error('No route coordinates returned from DirectionsService');

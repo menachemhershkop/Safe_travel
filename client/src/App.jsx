@@ -15,41 +15,46 @@ function App() {
 
   return (
     <main className="app">
-      {!isPlanned ? (
-        <div className="map-layout">
-          <div className="map-shell">
-            <MapView key={mapKey} />
-            <div className="planner-overlay">
-              <TripForm onPlanned={() => setIsPlanned(true)} />
-            </div>
-          </div>
+      {/* <div className="map-layout">
+        <div className="map-shell">
+          <MapView />
+          
         </div>
-      ) : (
-        <div className="planned-layout">
-          <div className="planned-right">
-            <div className="map-shell">
-              <MapView key={mapKey} />
+      </div> */}
+
+      <div className="planned-layout">
+        <div className="planned-right">
+          <div className="map-shell">
+            <MapView />
+            {!isPlanned && (
+              <div className="planner-overlay">
+                <TripForm onPlanned={() => setIsPlanned(true)} />
+              </div>
+            )}
+            {isPlanned && (
               <div className="planner-topbar">
                 <PlannedTrip
                   onNewTrip={() => {
                     resetRoute()
                     setSegments([])
                     setIsPlanned(false)
-                    setMapKey((k) => k + 1)
                   }}
                 />
               </div>
-            </div>
+            )}
           </div>
-
+        </div>
+        {isPlanned && (
           <aside className="planned-left">
             <section className="risk-panel">
               <div className="risk-panel-title">רמת סיכון לנסיעה</div>
               <RiskMessage riskValue={tripRisk} />
             </section>
           </aside>
-        </div>
-      )}
+        )
+        }
+      </div>
+
     </main>
   )
 }
