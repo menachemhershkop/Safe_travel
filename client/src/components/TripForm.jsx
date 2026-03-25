@@ -2,12 +2,10 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import './TripForm.css'
 import { searchIsraeliAddresses } from '../functions/addressService'
 import { debounce } from '../functions/debounce'
-import { submitTripDetails } from '../functions/tripSubmitService'
+import { useRouteStore } from './zustand/store.js'
+import { useMapRoute } from './map/hooks/useMapRoute'
 
-function TripForm() {
-  const [origin, setOrigin] = useState('')
-  const [destination, setDestination] = useState('')
-  const [departureTime, setDepartureTime] = useState('')
+function TripForm({ onPlanned } = {}) {
   const [selectedOrigin, setSelectedOrigin] = useState(null)
   const [selectedDestination, setSelectedDestination] = useState(null)
   const [originSuggestions, setOriginSuggestions] = useState([])
@@ -15,11 +13,23 @@ function TripForm() {
   const [isOriginLoading, setIsOriginLoading] = useState(false)
   const [isDestinationLoading, setIsDestinationLoading] = useState(false)
   const [openField, setOpenField] = useState(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState('')
   const [submitError, setSubmitError] = useState('')
   const originRef = useRef('')
   const destinationRef = useRef('')
+
+  const {
+    origin,
+    destination,
+    departureTime,
+    isSubmitting,
+    setIsSubmitting,
+    setOrigin,
+    setDestination,
+    setDepartureTime,
+  } = useRouteStore()
+
+  const { loadRoute } = useMapRoute()
 
   originRef.current = origin
   destinationRef.current = destination
@@ -33,7 +43,7 @@ function TripForm() {
           setOriginSuggestions(results)
           setIsOriginLoading(false)
         }
-      }, 350),
+      }, 150),
     [],
   )
 
@@ -46,7 +56,7 @@ function TripForm() {
           setDestinationSuggestions(results)
           setIsDestinationLoading(false)
         }
-      }, 350),
+      }, 150),
     [],
   )
 
@@ -112,7 +122,7 @@ function TripForm() {
     }
 
     if (!selectedOrigin || !selectedDestination) {
-      setSubmitError('כדי לשלוח למפה, יש לבחור מוצא ויעד מתוך רשימת ההצעות.')
+      setSubmitError('כדי לתכנן נסיעה, יש לבחור מוצא ויעד מתוך רשימת ההצעות.')
       return
     }
 
@@ -131,33 +141,16 @@ function TripForm() {
       return
     }
 
-    const payload = {
-      origin: {
-        label: selectedOrigin.label,
-        lat: originLat,
-        lon: originLon,
-        placeId: selectedOrigin.id,
-        rawQuery: trimmedOrigin,
-      },
-      destination: {
-        label: selectedDestination.label,
-        lat: destinationLat,
-        lon: destinationLon,
-        placeId: selectedDestination.id,
-        rawQuery: trimmedDestination,
-      },
-      departureTime,
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      source: 'nominatim',
-    }
-
     setIsSubmitting(true)
 
     try {
-      await submitTripDetails(payload)
-      setSubmitMessage('הפרטים נשלחו בהצלחה.')
+      await loadRoute()
+      setSubmitMessage('הנסיעה תוכננה בהצלחה.')
+      if (typeof onPlanned === 'function') {
+        onPlanned()
+      }
     } catch (error) {
-      setSubmitError(error.message || 'שליחה נכשלה, נסה שוב.')
+      setSubmitError(error.message || 'תכנון נכשל, נסה שוב.')
     } finally {
       setIsSubmitting(false)
     }
@@ -215,12 +208,9 @@ function TripForm() {
             onBlur={() => setTimeout(() => setOpenField(null), 120)}
             placeholder="לדוגמה: ירושלים"
           />
-          {openField === 'destination' &&
-          (isDestinationLoading || destinationSuggestions.length > 0) ? (
+          {openField === 'destination' && (isDestinationLoading || destinationSuggestions.length > 0) ? (
             <ul className="suggestions-list">
-              {isDestinationLoading ? (
-                <li className="suggestion-status">טוען הצעות...</li>
-              ) : null}
+              {isDestinationLoading ? <li className="suggestion-status">טוען הצעות...</li> : null}
               {!isDestinationLoading
                 ? destinationSuggestions.map((suggestion) => (
                     <li key={suggestion.id}>
