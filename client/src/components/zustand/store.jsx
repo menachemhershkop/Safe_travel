@@ -1,1 +1,0 @@
-export { useRouteStore } from './store.js'

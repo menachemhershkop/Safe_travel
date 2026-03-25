@@ -40,7 +40,7 @@ import { useRouteStore } from '../../zustand/store.js';
 export function useMapRoute() {
   const [loading, setLoading] = useState(false);
   const setSegments = useRouteStore((s) => s.setSegments);
-
+  const setConfines = useRouteStore((s) => s.setConfines)
   function reduceCoordinates(coords, maxPoints = 200) {
     if (!Array.isArray(coords) || coords.length <= maxPoints) return coords || [];
     const lastIdx = coords.length - 1;
@@ -55,8 +55,11 @@ export function useMapRoute() {
     setLoading(true);
     try {
       setSegments([]);
-      const routeCoords = await fetchRoute();
-      console.log(routeCoords);
+      const res = await fetchRoute();
+      
+      const { coordinates, confines } = res
+      const routeCoords = coordinates
+      setConfines(confines)
 
       if (!Array.isArray(routeCoords) || routeCoords.length === 0) {
         throw new Error('No route coordinates returned from DirectionsService');

@@ -6,12 +6,14 @@ export const useRouteStore = create((set) => ({
   departureTime: "",
   isSubmitting: false,
   segments: [],
+  confines: [],
 
   setIsSubmitting: (send) => set({ isSubmitting: send }),
   setOrigin: (origin) => set({ origin }),
   setDestination: (destination) => set({ destination }),
   setDepartureTime: (time) => set({ departureTime: time }),
   setSegments: (segments) => set({ segments }),
+  setConfines: (confines) => set({ confines }),
 
   reset: () =>
     set({
@@ -20,6 +22,7 @@ export const useRouteStore = create((set) => ({
       departureTime: "",
       isSubmitting: false,
       segments: [],
+      confines: [],
     }),
 }))
 

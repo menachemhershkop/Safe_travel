@@ -5,9 +5,6 @@ import { debounce } from '../functions/debounce'
 import { useRouteStore } from './zustand/store.js'
 import { useMapRoute } from './map/hooks/useMapRoute'
 function TripForm() {
-  // const [origin, setOrigin] = useState('')
-  // const [destination, setDestination] = useState('')
-  // const [departureTime, setDepartureTime] = useState('')
   const [selectedOrigin, setSelectedOrigin] = useState(null)
   const [selectedDestination, setSelectedDestination] = useState(null)
   const [originSuggestions, setOriginSuggestions] = useState([])
@@ -15,7 +12,6 @@ function TripForm() {
   const [isOriginLoading, setIsOriginLoading] = useState(false)
   const [isDestinationLoading, setIsDestinationLoading] = useState(false)
   const [openField, setOpenField] = useState(null)
-  // const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState('')
   const [submitError, setSubmitError] = useState('')
   const originRef = useRef('')
@@ -146,7 +142,6 @@ function TripForm() {
       setIsSubmitting(false)
     }
   }
-  // console.log(origin, destination, departureTime,);
 
   return (
     <section className="trip-form-card">
