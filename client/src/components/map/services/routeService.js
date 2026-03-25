@@ -36,7 +36,7 @@ export async function fetchRoute() {
           return reject(new Error("Directions request failed: " + status));
         }
 
-        const coordinates = decodePolyline(res.routes[0].overview_polyline.points);
+        const coordinates = decodePolyline(res.routes[0].overview_polyline);
 
         resolve(coordinates);
       }
