@@ -40,11 +40,15 @@ export function useMapRoute() {
         throw new Error('Invalid backend response: expected { segments: [...] }');
       }
 
+      // כאן צריך לתקן: להחליף את שם השדה בהתאם למה שהשרת מחזיר (לדוגמה: response.risk / response.tripRisk / response.summary.risk)
+      const tripRisk = response?.tripRisk;
+      setTripRisk(tripRisk ?? null);
+
       setSegments(segments);
     } finally {
       setLoading(false);
     }
-  }, [setSegments]);
+  }, [setSegments, setTripRisk]);
 
   return { loading, loadRoute };
 }
