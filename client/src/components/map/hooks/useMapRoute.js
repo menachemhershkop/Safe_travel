@@ -40,6 +40,7 @@ import { useRouteStore } from '../../zustand/store.js';
 export function useMapRoute() {
   const [loading, setLoading] = useState(false);
   const setSegments = useRouteStore((s) => s.setSegments);
+  const setTripRisk = useRouteStore((s) => s.setTripRisk);
 
   function reduceCoordinates(coords, maxPoints = 200) {
     if (!Array.isArray(coords) || coords.length <= maxPoints) return coords || [];
@@ -69,11 +70,15 @@ export function useMapRoute() {
         throw new Error('Invalid backend response: expected { segments: [...] }');
       }
 
+      // כאן צריך לתקן: להחליף את שם השדה בהתאם למה שהשרת מחזיר (לדוגמה: response.risk / response.tripRisk / response.summary.risk)
+      const tripRisk = response?.tripRisk;
+      setTripRisk(tripRisk ?? null);
+
       setSegments(segments);
     } finally {
       setLoading(false);
     }
-  }, [setSegments]);
+  }, [setSegments, setTripRisk]);
 
   return { loading, loadRoute };
 }

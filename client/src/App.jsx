@@ -4,38 +4,52 @@ import { useState } from 'react'
 import TripForm from './components/TripForm'
 import PlannedTrip from './components/PlannedTrip'
 import { useRouteStore } from './components/zustand/store.js'
+import RiskMessage from './components/RiskMessage'
 
 function App() {
   const [isPlanned, setIsPlanned] = useState(false)
   const [mapKey, setMapKey] = useState(0)
   const resetRoute = useRouteStore((s) => s.reset)
   const setSegments = useRouteStore((s) => s.setSegments)
+  const tripRisk = useRouteStore((s) => s.tripRisk)
 
   return (
     <main className="app">
-      <div className="map-layout">
-        <div className="map-shell">
-          <MapView key={mapKey} />
-          {!isPlanned ? (
+      {!isPlanned ? (
+        <div className="map-layout">
+          <div className="map-shell">
+            <MapView key={mapKey} />
             <div className="planner-overlay">
               <TripForm onPlanned={() => setIsPlanned(true)} />
             </div>
-          ) : null}
-
-          {isPlanned ? (
-            <div className="planner-topbar">
-              <PlannedTrip
-                onNewTrip={() => {
-                  resetRoute()
-                  setSegments([])
-                  setIsPlanned(false)
-                  setMapKey((k) => k + 1)
-                }}
-              />
-            </div>
-          ) : null}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="planned-layout">
+          <div className="planned-right">
+            <div className="map-shell">
+              <MapView key={mapKey} />
+              <div className="planner-topbar">
+                <PlannedTrip
+                  onNewTrip={() => {
+                    resetRoute()
+                    setSegments([])
+                    setIsPlanned(false)
+                    setMapKey((k) => k + 1)
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <aside className="planned-left">
+            <section className="risk-panel">
+              <div className="risk-panel-title">רמת סיכון לנסיעה</div>
+              <RiskMessage riskValue={tripRisk} />
+            </section>
+          </aside>
+        </div>
+      )}
     </main>
   )
 }
