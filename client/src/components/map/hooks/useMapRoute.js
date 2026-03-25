@@ -1,36 +1,4 @@
-// import { useEffect, useState } from 'react';
-// import { fetchRoute } from '../services/routeService.js';
-// import { decodePolyline } from '../utils/polyline.js';
 
-// export function useMapRoute() {
-//   const [coordinates, setCoordinates] = useState([]);
-//   useEffect(() => {
-//     let cancelled = false;
-
-//     async function load() {
-//       const route = await fetchRoute();
-
-//       // Current contract: mock route coordinates.
-//       if (route?.coordinates && Array.isArray(route.coordinates)) {
-//         if (!cancelled) setCoordinates(route.coordinates);
-//         return;
-//       }
-
-//       // Future contract: routeService may return an encoded polyline.
-//       if (route?.encodedPolyline && typeof route.encodedPolyline === 'string') {
-//         if (!cancelled) setCoordinates(decodePolyline(route.encodedPolyline));
-//       }
-//     }
-
-//     load();
-
-//     return () => {
-//       cancelled = true;
-//     };
-//   }, []);
-
-//   return { coordinates };
-// }
 
 import { useCallback, useState } from 'react';
 import { fetchRoute } from '../services/routeService.js';
