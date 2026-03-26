@@ -8,8 +8,9 @@ export const useRouteStore = create((set) => ({
   segments: [],
   tripRisk: null,
   confines: [],
+  duration: "",
 
-
+  setDuration: (duration) => set({ duration }),
   setIsSubmitting: (send) => set({ isSubmitting: send }),
   setOrigin: (origin) => set({ origin }),
   setDestination: (destination) => set({ destination }),
@@ -27,6 +28,7 @@ export const useRouteStore = create((set) => ({
       segments: [],
       tripRisk: null,
       confines: [],
+      duration: ""
     }),
 }))
 

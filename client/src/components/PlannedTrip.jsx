@@ -2,7 +2,7 @@ import { useRouteStore } from './zustand/store.js'
 import './TripForm.css'
 
 export default function PlannedTrip({ onNewTrip } = {}) {
-  const { origin, destination, departureTime } = useRouteStore()
+  const { origin, destination, departureTime, duration } = useRouteStore()
 
   return (
     <section className="planned-trip-bar">
@@ -35,7 +35,7 @@ export default function PlannedTrip({ onNewTrip } = {}) {
 
         <label className="planned-trip-field">
           <span className="planned-trip-label">זמן נסיעה</span>
-          <input type="text" value="" readOnly placeholder="בהמשך…" />
+          <input type="text" value={duration} readOnly placeholder="בהמשך…" />
         </label>
       </div>
     </section>

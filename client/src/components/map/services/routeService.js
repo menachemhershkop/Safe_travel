@@ -32,8 +32,8 @@ export async function fetchRoute() {
 
         const coordinates = decodePolyline(res.routes[0].overview_polyline);
         const confines = [res.routes[0].legs[0].end_location, res.routes[0].legs[0].start_location]
-
-        resolve({ coordinates, confines });
+        const duration = [res.routes[0].legs[0].duration.text]
+        resolve({ coordinates, confines, duration });
       }
     );
   });

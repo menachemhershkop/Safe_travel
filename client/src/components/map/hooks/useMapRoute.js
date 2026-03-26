@@ -9,6 +9,7 @@ export function useMapRoute() {
   const setSegments = useRouteStore((s) => s.setSegments);
   const setTripRisk = useRouteStore((s) => s.setTripRisk);
   const setConfines = useRouteStore((s) => s.setConfines)
+  const setDuration = useRouteStore((s) => s.setDuration)
 
   function reduceCoordinates(coords, maxPoints = 200) {
     if (!Array.isArray(coords) || coords.length <= maxPoints) return coords || [];
@@ -26,10 +27,10 @@ export function useMapRoute() {
       setSegments([]);
       const res = await fetchRoute();
 
-      const { coordinates, confines } = res
+      const { coordinates, confines, duration } = res
       const routeCoords = coordinates
       setConfines(confines)
-
+      setDuration(duration)
       if (!Array.isArray(routeCoords) || routeCoords.length === 0) {
         throw new Error('No route coordinates returned from DirectionsService');
       }
