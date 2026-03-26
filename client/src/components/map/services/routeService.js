@@ -1,10 +1,4 @@
-// const MOCK_ROUTE_COORDINATES = [
-//   { lat: 32.0853, lng: 34.7818 }, // center of Israel
-//   { lat: 32.045, lng: 34.765 },
-//   { lat: 31.994, lng: 34.805 },
-//   { lat: 31.976, lng: 34.848 },
-//   { lat: 32.015, lng: 34.885 },
-// ];
+
 import { useRouteStore } from "../../zustand/store.js";
 import { decodePolyline } from "../utils/polyline";
 import timeStringToTimestamp from "../utils/timeStringToTimestamp";
@@ -37,8 +31,9 @@ export async function fetchRoute() {
         }
 
         const coordinates = decodePolyline(res.routes[0].overview_polyline);
-
-        resolve(coordinates);
+        const confines = [res.routes[0].legs[0].end_location, res.routes[0].legs[0].start_location]
+        const duration = [res.routes[0].legs[0].duration.text]
+        resolve({ coordinates, confines, duration });
       }
     );
   });
